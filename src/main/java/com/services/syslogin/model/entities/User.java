@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+
 
 @Entity
 public class User {
@@ -12,9 +14,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank
     private String nome;
+    @NotBlank
     private String cpf;
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
 
     public User() {

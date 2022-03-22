@@ -5,6 +5,8 @@ import com.services.syslogin.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("services/cadastro")
 public class UserController {
@@ -13,6 +15,7 @@ public class UserController {
         - Criptografar a senha
         - Validar CPF
         - Validar Senha
+        - Criar Middleware
      */
 
     @Autowired
@@ -20,8 +23,7 @@ public class UserController {
 
     @PostMapping
     public @ResponseBody
-    User newUser(@RequestParam String nome, @RequestParam String cpf, @RequestParam String email, @RequestParam String password){
-        User user = new User(nome, cpf, email , password);
+    User newUser(@Valid User user){
         userRepository.save(user);
         return user;
     }
