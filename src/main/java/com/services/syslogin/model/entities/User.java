@@ -1,10 +1,14 @@
 package com.services.syslogin.model.entities;
 
+import com.services.syslogin.model.logic.EncryptDecryptPassword;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 
 @Entity
@@ -71,7 +75,8 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        EncryptDecryptPassword edp = new EncryptDecryptPassword();
+        this.password = edp.EncryptPassword(password);
     }
 }
