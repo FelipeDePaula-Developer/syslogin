@@ -1,18 +1,26 @@
 package com.services.syslogin.model.entities;
 
+import com.services.syslogin.model.logic.EDPassword;
 import com.services.syslogin.model.logic.EncryptDecryptPassword;
+import com.services.syslogin.model.validations.UserDataValidation;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 
 @Entity
 public class User {
+
+    /*todo
+       Adicionar injeção de dependencia ao projeto
+     */
+
+    @Transient
+    private EDPassword edPassword;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +45,8 @@ public class User {
         this.cpf = cpf;
         this.email = email;
         this.password = password;
+
+        this.edPassword = edPassword;
     }
 
     public int getId() {
@@ -68,15 +78,21 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        UserDataValidation udv = new UserDataValidation();
+        if (udv.emailValidate(email)){
+
+            this.email = email;
+
+        }
+
+
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        EncryptDecryptPassword edp = new EncryptDecryptPassword();
-        this.password = edp.EncryptPassword(password);
+    public void setPassword(String password) throws GeneralSecurityException {
+        this.password = this.edPassword.EncryptPassword(password);
     }
 }

@@ -11,11 +11,9 @@ import javax.validation.Valid;
 @RequestMapping("services/cadastro")
 public class UserController {
 
-    /*@todo
+    /*todo
         - Criptografar a senha
         - Validar CPF
-        - Validar Senha
-        - Criar Middleware
      */
 
     @Autowired
