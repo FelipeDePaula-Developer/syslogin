@@ -4,21 +4,22 @@ import com.services.syslogin.model.logic.EDPassword;
 import com.services.syslogin.model.logic.EncryptDecryptPassword;
 import com.services.syslogin.model.validations.UserDataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.security.GeneralSecurityException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 
 
 @Entity
+@Component
 public class User {
 
     /*todo
        Adicionar injeção de dependencia ao projeto
      */
 
+    @Autowired
     @Transient
     private EDPassword edPassword;
 
@@ -39,7 +40,7 @@ public class User {
 
     }
 
-    public User(String nome, String cpf, String email, String password) {
+    public User(String nome, String cpf, String email, String password, EDPassword edPassword) {
         super();
         this.nome = nome;
         this.cpf = cpf;
@@ -93,6 +94,6 @@ public class User {
     }
 
     public void setPassword(String password) throws GeneralSecurityException {
-        this.password = this.edPassword.EncryptPassword(password);
+        this.password = this.edPassword.encryptPassword(password);
     }
 }

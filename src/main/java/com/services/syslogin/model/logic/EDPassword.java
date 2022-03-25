@@ -4,5 +4,5 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 public interface EDPassword {
-    String EncryptPassword(String password) throws java.security.GeneralSecurityException;
+    String encryptPassword(String password) throws java.security.GeneralSecurityException;
 }
