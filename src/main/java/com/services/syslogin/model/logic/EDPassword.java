@@ -1,5 +1,7 @@
 package com.services.syslogin.model.logic;
 
+import org.springframework.stereotype.Component;
+
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 

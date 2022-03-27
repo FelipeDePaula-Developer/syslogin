@@ -2,14 +2,16 @@ package com.services.syslogin.model.entities;
 
 import com.services.syslogin.model.logic.EDPassword;
 import com.services.syslogin.model.logic.EncryptDecryptPassword;
+import com.services.syslogin.model.utilities.WriteLog;
 import com.services.syslogin.model.validations.UserDataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.IOException;
 import java.security.GeneralSecurityException;
-
 
 @Entity
 @Component
@@ -19,8 +21,11 @@ public class User {
        Adicionar injeção de dependencia ao projeto
      */
 
-    @Autowired
     @Transient
+    private final WriteLog writeLog = new WriteLog();
+
+    @Transient
+    @Autowired
     private EDPassword edPassword;
 
     @Id
@@ -36,18 +41,16 @@ public class User {
     @NotBlank
     private String password;
 
-    public User() {
+    public User() throws IOException {
 
     }
 
-    public User(String nome, String cpf, String email, String password, EDPassword edPassword) {
+    public User(String nome, String cpf, String email, String password) throws IOException {
         super();
         this.nome = nome;
         this.cpf = cpf;
         this.email = email;
         this.password = password;
-
-        this.edPassword = edPassword;
     }
 
     public int getId() {
@@ -93,7 +96,9 @@ public class User {
         return password;
     }
 
-    public void setPassword(String password) throws GeneralSecurityException {
-        this.password = this.edPassword.encryptPassword(password);
+    public void setPassword(String password) throws GeneralSecurityException, IOException {
+
+        this.writeLog.writeLog("teste" ,"teste");
+        this.password = edPassword.encryptPassword(password);
     }
 }
