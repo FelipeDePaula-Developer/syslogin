@@ -98,7 +98,7 @@ public class User {
 
     public void setPassword(String password) throws GeneralSecurityException, IOException {
 
-        this.writeLog.writeLog("teste" ,"teste");
+        this.writeLog.writeLogDebug("Teste","teste");
         this.password = edPassword.encryptPassword(password);
     }
 }

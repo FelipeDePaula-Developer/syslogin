@@ -1,9 +1,11 @@
 package com.services.syslogin.model.utilities;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
@@ -16,23 +18,30 @@ public class WriteLog {
     public WriteLog() {
     }
 
-    public void writeLog(String nameLog, String text) {
-        String logPath = "C:/JavaPrj/Logs/" + nameLog + ".txt";
-        String name = nameLog + ".txt";
+    public void writeLogDebug(String text, String nameLog) {
+        SimpleDateFormat format = new SimpleDateFormat("M_d");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String separator = System.lineSeparator();
+        String StackTrace = Arrays.toString(Thread.currentThread().getStackTrace()).replace( ',', '\n' );;
+        String name = nameLog + "_" + format.format(Calendar.getInstance().getTime()) + ".txt";
+        String logPath = "C:/JavaPrj/Logs/" + name;
         try {
             File log = new File(logPath);
-            if (log.createNewFile()){
+            if (log.createNewFile()) {
                 FileWriter fwlog = new FileWriter(logPath);
-                fwlog.write(text);
+                fwlog.write(
+                        dtf.format(now) + separator + text + separator + separator
+                );
                 fwlog.flush();
                 fwlog.close();
-            }else{
+            } else {
                 FileWriter fwlog = new FileWriter(logPath, true);
-                fwlog.write(System.lineSeparator());
-                fwlog.write(text);
+                fwlog.write(separator + dtf.format(now) + separator + text + separator +  separator
+                );
                 fwlog.flush();
                 fwlog.close();
-            };
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
