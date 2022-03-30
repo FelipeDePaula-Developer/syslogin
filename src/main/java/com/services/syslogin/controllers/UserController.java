@@ -3,12 +3,15 @@ package com.services.syslogin.controllers;
 import com.services.syslogin.model.entities.User;
 import com.services.syslogin.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("services/cadastro")
+@Component
 public class UserController {
 
     /*todo

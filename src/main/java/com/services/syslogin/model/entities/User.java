@@ -1,12 +1,7 @@
 package com.services.syslogin.model.entities;
 
-import com.services.syslogin.model.logic.EDPassword;
 import com.services.syslogin.model.logic.EncryptDecryptPassword;
 import com.services.syslogin.model.utilities.WriteLog;
-import com.services.syslogin.model.validations.UserDataValidation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -14,7 +9,6 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 @Entity
-@Component
 public class User {
 
     /*todo
@@ -25,8 +19,7 @@ public class User {
     private final WriteLog writeLog = new WriteLog();
 
     @Transient
-    @Autowired
-    private EDPassword edPassword;
+    private final EncryptDecryptPassword edPassword = new EncryptDecryptPassword();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +38,7 @@ public class User {
 
     }
 
-    public User(String nome, String cpf, String email, String password) throws IOException {
+    public User(String nome, String cpf, String email, String password) {
         super();
         this.nome = nome;
         this.cpf = cpf;
@@ -82,14 +75,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        UserDataValidation udv = new UserDataValidation();
-        if (udv.emailValidate(email)){
-
-            this.email = email;
-
-        }
-
-
+        this.email = email;
     }
 
     public String getPassword() {
@@ -98,7 +84,6 @@ public class User {
 
     public void setPassword(String password) throws GeneralSecurityException, IOException {
 
-        this.writeLog.writeLogDebug("Teste","teste");
         this.password = edPassword.encryptPassword(password);
     }
 }
