@@ -4,25 +4,23 @@ import com.services.syslogin.model.entities.User;
 import com.services.syslogin.model.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
-@RequestMapping("services/cadastro")
-@Component
+@Controller
 public class UserController {
 
-    /*todo
-        - Criptografar a senha
-        - Validar CPF
-     */
+
 
     @Autowired
     private UserRepository userRepository;
 
-    @PostMapping
+
+
+
+    @PostMapping("user/cadastro")
     public @ResponseBody
     User newUser(@Valid User user){
         userRepository.save(user);

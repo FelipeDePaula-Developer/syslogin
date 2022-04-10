@@ -8,8 +8,12 @@ public class UserDataValidation {
             + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
 
-    public boolean emailValidate(String email) {
+    public String emailValidate(String email) {
         Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+        if(matcher.matches()){
+            return email;
+        } else  {
+            return "Email Invalidado";
+        }
     }
 }

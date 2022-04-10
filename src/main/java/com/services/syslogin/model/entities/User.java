@@ -1,7 +1,7 @@
 package com.services.syslogin.model.entities;
 
 import com.services.syslogin.model.logic.EncryptDecryptPassword;
-import com.services.syslogin.model.utilities.WriteLog;
+import com.services.syslogin.model.validations.UserDataValidation;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -11,15 +11,12 @@ import java.security.GeneralSecurityException;
 @Entity
 public class User {
 
-    /*todo
-       Adicionar injeção de dependencia ao projeto
-     */
-
-    @Transient
-    private final WriteLog writeLog = new WriteLog();
 
     @Transient
     private final EncryptDecryptPassword edPassword = new EncryptDecryptPassword();
+
+    @Transient
+    private final UserDataValidation dataValidation = new UserDataValidation();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,7 +72,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = dataValidation.emailValidate(email);
     }
 
     public String getPassword() {
@@ -83,7 +80,6 @@ public class User {
     }
 
     public void setPassword(String password) throws GeneralSecurityException, IOException {
-
         this.password = edPassword.encryptPassword(password);
     }
 }
