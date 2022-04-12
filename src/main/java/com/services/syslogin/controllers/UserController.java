@@ -17,10 +17,7 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
-
-
-    @PostMapping("user/cadastro")
+    @PostMapping("pages/sign-up")
     public @ResponseBody
     User newUser(@Valid User user){
         userRepository.save(user);

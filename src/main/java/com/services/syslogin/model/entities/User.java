@@ -25,20 +25,17 @@ public class User {
     @NotBlank
     private String nome;
     @NotBlank
-    private String cpf;
-    @NotBlank
     private String email;
     @NotBlank
     private String password;
 
-    public User() throws IOException {
+    public User() {
 
     }
 
     public User(String nome, String cpf, String email, String password) {
         super();
         this.nome = nome;
-        this.cpf = cpf;
         this.email = email;
         this.password = password;
     }
@@ -59,27 +56,19 @@ public class User {
         this.nome = nome;
     }
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
-        this.email = dataValidation.emailValidate(email);
+        this.email = email;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) throws GeneralSecurityException, IOException {
-        this.password = edPassword.encryptPassword(password);
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
