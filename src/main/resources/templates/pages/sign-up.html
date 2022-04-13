@@ -167,15 +167,15 @@
                         <div class="card-body">
                             <form role="form text-left">
                                 <div class="mb-3">
-                                    <input type="text" name="nome" class="form-control" placeholder="Name"
+                                    <input type="text" id="nome" name="nome" class="form-control" placeholder="Name"
                                            aria-label="Name" aria-describedby="email-addon">
                                 </div>
                                 <div class="mb-3">
-                                    <input type="email" name="email" class="form-control" placeholder="Email"
+                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email"
                                            aria-label="Email" aria-describedby="email-addon">
                                 </div>
                                 <div class="mb-3">
-                                    <input type="password" name="password" class="form-control" placeholder="Password"
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Password"
                                            aria-label="Password" aria-describedby="password-addon">
                                 </div>
                                 <div class="form-check form-check-info text-left">
@@ -271,9 +271,11 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
+
     let action = document.getElementById('submit-form');
     action.addEventListener("click", function () {
-        action.preventDefault();
+        action.preventDefault;
+
         let httpx = new XMLHttpRequest();
 
         if (!httpx){
@@ -281,22 +283,25 @@
             return false;
         }
 
-        let args = {nome : document.getElementsByName('nome'),
-                    email : document.getElementsByName('email'),
-                    password : document.getElementsByName('password')};
+        let args = {nome : document.getElementById('nome').value,
+                    email : document.getElementById('email').value,
+                    password : document.getElementById('password').value};
 
         console.table(args);
-
-        httpx.onreadystatechange = alertContents();
+        args = JSON.stringify(args);
         httpx.open('POST', 'pages/sign-up', true);
-        httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpx.setRequestHeader("Content-Type", "application/json");
+        console.table(httpx);
         httpx.send(args);
+        console.table(httpx.status);
+        httpx.onreadystatechange = alertContents(httpx);
     })
 
-    function alertContents() {
-        if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            if (httpRequest.status === 200) {
-                alert(httpRequest.responseText);
+    function alertContents(httpx) {
+        console.table(httpx);
+        if (httpx.readyState === XMLHttpRequest.DONE) {
+            if (httpx.status === 200) {
+                alert(httpx.responseText);
             } else {
                 alert('There was a problem with the request.');
             }

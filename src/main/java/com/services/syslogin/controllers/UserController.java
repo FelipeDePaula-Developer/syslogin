@@ -19,8 +19,8 @@ public class UserController {
 
     @PostMapping("pages/sign-up")
     public @ResponseBody
-    User newUser(@Valid User user){
+    String newUser(@Valid User user){
         userRepository.save(user);
-        return user;
+        return "Registrou";
     }
 }
