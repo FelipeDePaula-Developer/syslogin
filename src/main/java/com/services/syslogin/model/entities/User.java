@@ -33,8 +33,11 @@ public class User {
 
     }
 
-    public User(String nome, String cpf, String email, String password) {
+    public User(String nome, String email, String password) {
         super();
+        System.out.println(nome);
+        System.out.println(email);
+        System.out.println(password);
         this.nome = nome;
         this.email = email;
         this.password = password;

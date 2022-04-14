@@ -175,7 +175,8 @@
                                            aria-label="Email" aria-describedby="email-addon">
                                 </div>
                                 <div class="mb-3">
-                                    <input type="password" id="password" name="password" class="form-control" placeholder="Password"
+                                    <input type="password" id="password" name="password" class="form-control"
+                                           placeholder="Password"
                                            aria-label="Password" aria-describedby="password-addon">
                                 </div>
                                 <div class="form-check form-check-info text-left">
@@ -273,32 +274,30 @@
     }
 
     let action = document.getElementById('submit-form');
-    action.addEventListener("click", function () {
-        action.preventDefault;
+    action.addEventListener("click", ajaxRequest, true)
+
+    function ajaxRequest(event) {
+        event.preventDefault();
 
         let httpx = new XMLHttpRequest();
 
-        if (!httpx){
+        if (!httpx) {
             alert("Ajax Request Error")
             return false;
         }
 
-        let args = {nome : document.getElementById('nome').value,
-                    email : document.getElementById('email').value,
-                    password : document.getElementById('password').value};
-
-        console.table(args);
-        args = JSON.stringify(args);
-        httpx.open('POST', 'pages/sign-up', true);
-        httpx.setRequestHeader("Content-Type", "application/json");
-        console.table(httpx);
-        httpx.send(args);
-        console.table(httpx.status);
+        let args = {
+            nome: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+        httpx.open('POST', 'cad/user', true);
+        httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        httpx.send(JSON.stringify(args));
         httpx.onreadystatechange = alertContents(httpx);
-    })
+    }
 
     function alertContents(httpx) {
-        console.table(httpx);
         if (httpx.readyState === XMLHttpRequest.DONE) {
             if (httpx.status === 200) {
                 alert(httpx.responseText);
