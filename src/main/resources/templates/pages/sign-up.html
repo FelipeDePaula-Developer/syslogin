@@ -274,9 +274,9 @@
     }
 
     let action = document.getElementById('submit-form');
-    action.addEventListener("click", ajaxRequest, true)
+    action.addEventListener("click", ajaxPost, true)
 
-    function ajaxRequest(event) {
+    function ajaxPost(event) {
         event.preventDefault();
 
         let httpx = new XMLHttpRequest();
@@ -293,7 +293,7 @@
         };
         httpx.open('POST', 'cad/user', true);
         httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        httpx.send(JSON.stringify(args));
+        httpx.send(`nome=${args["nome"]}&email=${args["email"]}&password=${args["password"]}`);
         httpx.onreadystatechange = alertContents(httpx);
     }
 

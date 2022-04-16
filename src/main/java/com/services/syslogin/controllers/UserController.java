@@ -12,15 +12,13 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
 
-
-
     @Autowired
     private UserRepository userRepository;
 
     @PostMapping("pages/cad/user")
     public @ResponseBody
-    String newUser(@Valid User user){
+    User newUser(@Valid User user){
         userRepository.save(user);
-        return "Registrou";
+        return user;
     }
 }
