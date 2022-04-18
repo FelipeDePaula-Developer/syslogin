@@ -1,6 +1,4 @@
 function ajaxPost(request_route, args) {
-    // event.preventDefault();
-
     let httpx = new XMLHttpRequest();
 
     if (!httpx) {
@@ -8,11 +6,9 @@ function ajaxPost(request_route, args) {
         return false;
     }
 
-    console.table(args);
     httpx.open('POST', request_route, true);
     httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     let data = convertParamsToUrl(args);
-    console.log(data);
     httpx.send(data);
     httpx.onreadystatechange = alertContents(httpx);
 }

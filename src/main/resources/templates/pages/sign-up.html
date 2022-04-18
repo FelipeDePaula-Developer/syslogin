@@ -266,12 +266,6 @@
 <script th:src="@{../assets/js/plugins/smooth-html.min.js}"></script>
 <script th:src="@{../assets/js/pages/sign-up.js}" type="module"></script>
 <script>
-
-    /*
-    * TODO
-    *  - ver como utilizar o package.json para importar as funções do request_funcs
-    * */
-
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
         var options = {
@@ -279,42 +273,6 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-
-    // let action = document.getElementById('submit-form');
-    // let args = {
-    //     nome: document.getElementById('nome').value,
-    //     email: document.getElementById('email').value,
-    //     password: document.getElementById('password').value
-    // };
-    //
-    // action.addEventListener("click", ajaxPost("cad/user", args), true)
-
-    // function ajaxPost(event) {
-    //     event.preventDefault();
-    //
-    //     let httpx = new XMLHttpRequest();
-    //
-    //     if (!httpx) {
-    //         alert("Ajax Request Error")
-    //         return false;
-    //     }
-    //
-    //     httpx.open('POST', 'cad/user', true);
-    //     httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    //     httpx.send(`nome=${args["nome"]}&email=${args["email"]}&password=${args["password"]}`);
-    //     httpx.onreadystatechange = alertContents(httpx);
-    // }
-    //
-    // function alertContents(httpx) {
-    //     if (httpx.readyState === XMLHttpRequest.DONE) {
-    //         if (httpx.status === 200) {
-    //             alert(httpx.responseText);
-    //         } else {
-    //             alert('There was a problem with the request.');
-    //         }
-    //     }
-    // }
-
 </script>
 <!-- Github buttons -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
