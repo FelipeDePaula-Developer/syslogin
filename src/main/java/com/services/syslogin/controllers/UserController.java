@@ -18,7 +18,7 @@ public class UserController {
     @PostMapping("pages/cad/user")
     public @ResponseBody
     User newUser(@Valid User user){
-        userRepository.save(user);
-        return user;
+        User result = userRepository.save(user);
+        return result;
     }
 }
