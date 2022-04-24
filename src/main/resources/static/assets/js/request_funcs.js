@@ -1,4 +1,4 @@
-function ajaxPost(request_route, args, return_route = '') {
+function ajaxPost(request_route, args) {
     let httpx = new XMLHttpRequest();
 
     if (!httpx) {
@@ -7,19 +7,8 @@ function ajaxPost(request_route, args, return_route = '') {
     }
     httpx.open('POST', request_route, true);
     httpx.onreadystatechange = () => {
-        if (httpx.readyState === 4 && httpx.status === 200) {
-            console.table(httpx);
-            let ajaxReturn = JSON.parse(httpx.responseText);
-            console.table(ajaxReturn);
-            var ajaxSucess = true;
-            Object.values(ajaxReturn).forEach((campo) => {
-                if (campo == null) {
-                    ajaxSucess = false;
-                }
-            })
-            if (ajaxReturn && return_route !== '') {
-                location.replace(return_route);
-            }
+        if (httpx.readyState === 4 && httpx.status === 200 && httpx.responseText === 'true') {
+            return true;
         }
     };
     httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

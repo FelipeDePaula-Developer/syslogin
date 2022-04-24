@@ -4,11 +4,14 @@ let action = document.getElementById('submit-form');
 function stopDefaultSendAjax(action){
     action.preventDefault();
     let args = {
-        nome: document.getElementById('nome').value,
+        userName: document.getElementById('user-name').value,
         email: document.getElementById('email').value,
         password: document.getElementById('password').value
     };
-    ajaxPost('cad/user', args, '/');
+    let ajaxReturn = ajaxPost('cad/user', args);
+    if (ajaxReturn){
+        location.replace('/');
+    }
 }
 
 action.addEventListener("click", stopDefaultSendAjax)
