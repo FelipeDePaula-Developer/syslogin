@@ -8,10 +8,7 @@ function stopDefaultSendAjax(action){
         email: document.getElementById('email').value,
         password: document.getElementById('password').value
     };
-    let ajaxReturn = ajaxPost('cad/user', args);
-    if (ajaxReturn){
-        location.replace('/');
-    }
+    ajaxPost("POST",'cad/user', args, '/pages/dashboard');
 }
 
 action.addEventListener("click", stopDefaultSendAjax)

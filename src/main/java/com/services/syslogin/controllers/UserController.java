@@ -39,4 +39,11 @@ public class UserController {
         }
 
     }
+
+    @GetMapping("pages/log/user")
+    public @ResponseBody
+    boolean loginUser (@RequestParam String email, @RequestParam String password){
+
+        return true;
+    }
 }

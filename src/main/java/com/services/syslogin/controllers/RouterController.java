@@ -8,7 +8,7 @@ public class RouterController {
 
     @RequestMapping("/")
     public String index() {
-        return "dashboard";
+        return "sign-in";
     }
 
     @RequestMapping("pages/sign-in")
@@ -20,5 +20,9 @@ public class RouterController {
     public String signUp() {
         return "pages/sign-up";
     }
+
+    @RequestMapping("pages/dashboard")
+    public String dashboard() { return "pages/dashboard"; }
+
 
 }

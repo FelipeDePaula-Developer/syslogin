@@ -1,14 +1,14 @@
-function ajaxPost(request_route, args) {
+function ajaxPost(method, request_route, args, route_callback = '') {
     let httpx = new XMLHttpRequest();
 
     if (!httpx) {
         alert("Ajax Request Error")
         return false;
     }
-    httpx.open('POST', request_route, true);
+    httpx.open(method, request_route, true);
     httpx.onreadystatechange = () => {
         if (httpx.readyState === 4 && httpx.status === 200 && httpx.responseText === 'true') {
-            return true;
+            location.replace(route_callback);
         }
     };
     httpx.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
