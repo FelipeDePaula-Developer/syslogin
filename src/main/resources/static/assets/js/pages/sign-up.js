@@ -1,4 +1,4 @@
-import {ajaxPost} from "../request_funcs.js";
+import {ajaxPost} from "../common_funcs/request_funcs.js";
 
 let action = document.getElementById('submit-form');
 function stopDefaultSendAjax(action){

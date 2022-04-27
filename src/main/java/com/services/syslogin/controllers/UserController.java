@@ -29,8 +29,11 @@ public class UserController {
     boolean newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 
         boolean emailValidate = userDataValidation.emailValidate(email);
-        String encryptedPassword = encryptDecryptPassword.encryptPassword(password);
-        if (emailValidate) {
+        String userNameExists = userRepository.verifyUsernameExists(userName);
+        String emailExists = userRepository.verifyEmailExists(email);
+
+        if (emailValidate && userNameExists == null && emailExists == null) {
+            String encryptedPassword = encryptDecryptPassword.encryptPassword(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
             return true;
@@ -40,10 +43,11 @@ public class UserController {
 
     }
 
-    @GetMapping("pages/log/user")
+    @PostMapping("pages/log/user")
     public @ResponseBody
-    boolean loginUser (@RequestParam String email, @RequestParam String password){
+    String loginUser (@RequestParam String email, @RequestParam String password){
 
-        return true;
+        String id = userRepository.searchUser(email, password);
+        return id;
     }
 }

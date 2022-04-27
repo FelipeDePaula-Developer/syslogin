@@ -13,7 +13,7 @@ public class User {
     private int id;
 
     @NotBlank
-    private String nome;
+    private String userName;
     @NotBlank
     private String email;
     @NotBlank
@@ -23,9 +23,9 @@ public class User {
 
     }
 
-    public User(String nome, String email, String password) {
+    public User(String userName, String email, String password) {
         super();
-        this.nome = nome;
+        this.userName = userName;
         this.email = email;
         this.password = password;
     }
@@ -38,12 +38,12 @@ public class User {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getEmail() {

@@ -12,6 +12,8 @@ import java.util.Base64;
 
 @Component
 public class EncryptDecryptPassword{
+
+    private String jsSalt =  "/.ss-bZN+RBFY8zMXHYhp79L0=evqp5l3JCDIRvLqFIzSdQ+JJqlZZyqYj:.e*uel0TQdOssa?Ru4gCL";
     public String encryptPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
         SecureRandom random = new SecureRandom();
         byte[] salt = new byte[16];
