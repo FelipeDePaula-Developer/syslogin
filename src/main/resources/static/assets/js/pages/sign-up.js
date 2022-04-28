@@ -1,4 +1,4 @@
-import {ajaxPost} from "../common_funcs/request_funcs.js";
+import {ajaxRequest} from "../common_funcs/request_funcs.js";
 
 let action = document.getElementById('submit-form');
 function stopDefaultSendAjax(action){
@@ -8,7 +8,11 @@ function stopDefaultSendAjax(action){
         email: document.getElementById('email').value,
         password: document.getElementById('password').value
     };
-    ajaxPost("POST",'cad/user', args, '/pages/dashboard');
+    ajaxRequest("POST",'cad/user', args, (res) =>{
+        if ((res['email'] !== ''|| res['username'] !== '') && res['error'] !== undefined){
+            alert(res);
+        };
+    });
 }
 
 action.addEventListener("click", stopDefaultSendAjax)
