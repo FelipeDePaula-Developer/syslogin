@@ -33,7 +33,9 @@
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <link th:href="@{../assets/css/nucleo-svg.css}" rel="stylesheet"/>
     <!-- CSS Files -->
-    <link id="pagestyle" th:href="@{../assets/css/soft-ui-dashboard.css?v=1.0.5}" rel="stylesheet"/>
+    <link th:href="@{../assets/css/soft-ui-dashboard.css?v=1.0.5}" rel="stylesheet"/>
+    <link th:href="@{../assets/css/custom.css}" rel="stylesheet">
+
 </head>
 
 <body class="">
@@ -85,6 +87,7 @@
 </nav>
 <!-- End Navbar -->
 <main class="main-content  mt-0">
+
     <section class="min-vh-100 mb-8">
         <div class="page-header align-items-start min-vh-50 pt-5 pb-11 m-3 border-radius-lg"
              style="background-image: url('../static/assets/img/curved-images/curved14.jpg');">
@@ -167,7 +170,7 @@
                         <div class="card-body">
                             <form role="form text-left">
                                 <div class="mb-3">
-                                    <input type="text" id="user-name" name="user-name" class="form-control" placeholder="Username"
+                                    <input type="text" id="username" name="username" class="form-control" placeholder="Username"
                                            aria-label="Name" aria-describedby="">
                                 </div>
                                 <div class="mb-3">
