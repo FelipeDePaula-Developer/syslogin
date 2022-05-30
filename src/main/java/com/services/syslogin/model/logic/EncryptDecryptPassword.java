@@ -1,28 +1,37 @@
 package com.services.syslogin.model.logic;
 
 import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.*;
 import java.util.Base64;
 
 @Component
 public class EncryptDecryptPassword{
+    private  String  jsSalt =   "Bar12345Bar12345" ;
+    private Cipher cipher;
+    private Key key;
 
-    private String jsSalt =  "/.ss-bZN+RBFY8zMXHYhp79L0=evqp5l3JCDIRvLqFIzSdQ+JJqlZZyqYj:.e*uel0TQdOssa?Ru4gCL";
-    public String encryptPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecureRandom random = new SecureRandom();
-        byte[] salt = new byte[16];
-        random.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        byte[] hash = factory.generateSecret(spec).getEncoded();
-        Base64.Encoder enc = Base64.getEncoder();
-        return enc.encodeToString(hash);
+    public EncryptDecryptPassword() throws Exception{
+//        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA");
+//        keyPairGen.initialize(1024);
+        this.key = new SecretKeySpec(jsSalt.getBytes(), "AES");
+        this.cipher = Cipher.getInstance("AES");
     }
 
+    public String encryptPassword(String password) throws Exception {
+        this.cipher.init(Cipher.ENCRYPT_MODE, this.key);
+        byte[] input = password.getBytes();
+        this.cipher.update(input);
+        byte[] cipherText = this.cipher.doFinal();
+        return Base64.getEncoder().encodeToString(cipherText);
+    }
+
+    public String decryptPassword(String encPassword) throws Exception{
+        byte[] password = Base64.getDecoder().decode(encPassword.getBytes());
+        this.cipher.init(Cipher.DECRYPT_MODE, this.key);
+        byte[] decipheredText = this.cipher.doFinal(password);
+        return new String(decipheredText);
+    }
 }
+

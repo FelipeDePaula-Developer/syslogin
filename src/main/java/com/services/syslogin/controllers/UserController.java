@@ -1,6 +1,5 @@
 package com.services.syslogin.controllers;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.services.syslogin.model.entities.User;
 import com.services.syslogin.model.logic.EncryptDecryptPassword;
 import com.services.syslogin.model.repositories.UserRepository;
@@ -11,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
+import java.util.Objects;
 
 @Controller
 public class UserController {
@@ -28,7 +25,7 @@ public class UserController {
 
     @PostMapping("pages/cad/user")
     public @ResponseBody
-    JSONObject newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    JSONObject newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) throws Exception {
         JSONObject json = new JSONObject();
         json.put("username", "");
         json.put("email", "");
@@ -57,9 +54,15 @@ public class UserController {
 
     @PostMapping("pages/log/user")
     public @ResponseBody
-    String loginUser (@RequestParam String email, @RequestParam String password){
+    String loginUser (@RequestParam String email, @RequestParam String password) throws Exception{
 
-        String id = userRepository.searchUser(email, password);
-        return id;
+        String dbUserReturn = userRepository.searchUserPerEmail(email);
+        if (!Objects.equals(dbUserReturn, "")){
+            String[] userData = dbUserReturn.split(",");
+            String dbpassword = encryptDecryptPassword.decryptPassword(userData[3]);
+            return dbpassword;
+        }else{
+            return "Não Encontrado";
+        }
     }
 }
