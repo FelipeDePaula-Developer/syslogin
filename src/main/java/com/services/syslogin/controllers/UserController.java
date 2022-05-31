@@ -23,7 +23,7 @@ public class UserController {
     private UserDataValidation userDataValidation;
 
 
-    @PostMapping("pages/cad/user")
+    @PostMapping("/cad/user")
     public @ResponseBody
     JSONObject newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) throws Exception {
         JSONObject json = new JSONObject();
@@ -37,7 +37,7 @@ public class UserController {
             String encryptedPassword = encryptDecryptPassword.encryptPassword(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
-            json.put("success", "Usuário Cadastrado");
+            json.put("success", "true");
             return json;
         }else{
             if(userNameExists != null)
@@ -52,7 +52,7 @@ public class UserController {
 
     }
 
-    @PostMapping("pages/log/user")
+    @PostMapping("/log/user")
     public @ResponseBody
     String loginUser (@RequestParam String email, @RequestParam String password) throws Exception{
 

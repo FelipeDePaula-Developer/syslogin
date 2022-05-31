@@ -5,11 +5,7 @@ let action = document.getElementById('submit-form');
 
 function stopDefaultSendAjax(action) {
     action.preventDefault();
-
-
     removeElementsByClass('form-error-message');
-
-
     let sendAjax = true;
     let userName = document.getElementById('username')
     let email = document.getElementById('email')
@@ -41,16 +37,19 @@ function stopDefaultSendAjax(action) {
         };
 
         ajaxRequest("POST", 'cad/user', args, (res) => {
+            if  (res['success'] === 'true'){
+                window.location.replace('/dashboard')
+            }
+
             if (res['username'] !== '' && res['error'] !== undefined) {
                 let span = `<span class="form-error-message">${res['username']}</span>`;
                 document.getElementById('username').insertAdjacentHTML('afterend', span);
             }
-            ;
+
             if (res['email'] !== '' && res['error'] !== undefined) {
                 let span = `<span class="form-error-message">${res['email']}</span>`;
                 document.getElementById('email').insertAdjacentHTML('afterend', span);
             }
-            ;
         });
     }
 }

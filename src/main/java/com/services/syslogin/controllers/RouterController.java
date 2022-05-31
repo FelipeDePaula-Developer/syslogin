@@ -8,20 +8,18 @@ public class RouterController {
 
     @RequestMapping("/")
     public String index() {
-        return "sign-in";
-    }
-
-    @RequestMapping("pages/sign-in")
-    public String signIn() {
         return "pages/sign-in";
     }
 
-    @RequestMapping("pages/sign-up")
+    @RequestMapping("/sign-in")
+    public String signIn() { return "pages/sign-in"; }
+
+    @RequestMapping("/sign-up")
     public String signUp() {
         return "pages/sign-up";
     }
 
-    @RequestMapping("pages/dashboard")
+    @RequestMapping("/dashboard")
     public String dashboard() { return "pages/dashboard"; }
 
 
