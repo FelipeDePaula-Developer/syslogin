@@ -1,5 +1,6 @@
 import {ajaxRequest} from "../common_funcs/request_funcs.js";
 import {removeElementsByClass} from "../common_funcs/DOM_manipulation.js";
+import {showError} from "../common_funcs/errors_funcs.js";
 
 let action = document.getElementById('submit-form');
 
@@ -12,20 +13,17 @@ function stopDefaultSendAjax(action) {
     let password = document.getElementById('password')
 
     if (userName.value === '') {
-        let error = `<span class="form-error-message">Campo obrigatório</span>`;
-        userName.insertAdjacentHTML('afterend', error);
+        showError("Campo obrigatório", userName);
         sendAjax = false
     }
 
     if (email.value === '') {
-        let error = `<span class="form-error-message">Campo obrigatório</span>`;
-        email.insertAdjacentHTML('afterend', error);
+        showError("Campo obrigatório", email);
         sendAjax = false
     }
 
     if (password.value === '') {
-        let error = `<span class="form-error-message">Campo obrigatório</span>`;
-        password.insertAdjacentHTML('afterend', error);
+        showError("Campo obrigatório", password);
         sendAjax = false
     }
 

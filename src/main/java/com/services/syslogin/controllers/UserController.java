@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 @Controller
@@ -39,11 +40,11 @@ public class UserController {
             userRepository.save(user);
             json.put("success", "true");
             return json;
-        }else{
-            if(userNameExists != null)
+        } else {
+            if (userNameExists != null)
                 json.put("username", "Esse username já está cadastrado no nosso sistema");
 
-            if(emailExists != null)
+            if (emailExists != null)
                 json.put("email", "Esse email já está cadastrado no nosso sistema");
 
             json.put("error", "Erro ao cadastrar usuário");
@@ -54,15 +55,23 @@ public class UserController {
 
     @PostMapping("/log/user")
     public @ResponseBody
-    String loginUser (@RequestParam String email, @RequestParam String password) throws Exception{
+    JSONObject loginUser(@RequestParam String email, @RequestParam String password) throws Exception {
+        JSONObject json = new JSONObject();
 
         String dbUserReturn = userRepository.searchUserPerEmail(email);
-        if (!Objects.equals(dbUserReturn, "")){
+        if (dbUserReturn != null) {
             String[] userData = dbUserReturn.split(",");
+            System.out.println(Arrays.toString(userData));
             String dbpassword = encryptDecryptPassword.decryptPassword(userData[3]);
-            return dbpassword;
-        }else{
-            return "Não Encontrado";
+            if (Objects.equals(dbpassword, password)) {
+                json.put("success", "true");
+            } else {
+                json.put("success", "false");
+            }
+        } else {
+            json.put("success", "false");
         }
+
+        return json;
     }
 }
