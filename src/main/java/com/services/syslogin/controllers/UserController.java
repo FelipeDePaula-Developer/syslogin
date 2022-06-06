@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
+
 import java.util.Objects;
 
 @Controller
@@ -59,9 +59,9 @@ public class UserController {
         JSONObject json = new JSONObject();
 
         String dbUserReturn = userRepository.searchUserPerEmail(email);
+        System.out.println(dbUserReturn);
         if (dbUserReturn != null) {
             String[] userData = dbUserReturn.split(",");
-            System.out.println(Arrays.toString(userData));
             String dbpassword = encryptDecryptPassword.decryptPassword(userData[3]);
             if (Objects.equals(dbpassword, password)) {
                 json.put("success", "true");

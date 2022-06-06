@@ -40,13 +40,15 @@ function stopDefaultSendAjax(action) {
             }
 
             if (res['username'] !== '' && res['error'] !== undefined) {
-                let span = `<span class="form-error-message">${res['username']}</span>`;
-                document.getElementById('username').insertAdjacentHTML('afterend', span);
+                // let span = `<span class="form-error-message">${res['username']}</span>`;
+                // document.getElementById('username').insertAdjacentHTML('afterend', span);
+                showError(res['username'], '', '#username');
             }
 
             if (res['email'] !== '' && res['error'] !== undefined) {
-                let span = `<span class="form-error-message">${res['email']}</span>`;
-                document.getElementById('email').insertAdjacentHTML('afterend', span);
+                // let span = `<span class="form-error-message">${res['email']}</span>`;
+                // document.getElementById('email').insertAdjacentHTML('afterend', span);
+                showError(res['email'], '', '#email');
             }
         });
     }

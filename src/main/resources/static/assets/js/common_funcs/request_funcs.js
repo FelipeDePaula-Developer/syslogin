@@ -8,7 +8,6 @@ function ajaxRequest(method, request_route, args, function_callback) {
     httpx.onreadystatechange = () => {
         if (httpx.readyState === 4 && httpx.status === 200) {
             let response = JSON.parse(httpx.responseText);
-            console.log(response);
             function_callback(response);
         }
     };
