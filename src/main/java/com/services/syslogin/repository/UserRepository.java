@@ -1,6 +1,6 @@
-package com.services.syslogin.model.repositories;
+package com.services.syslogin.repository;
 
-import com.services.syslogin.model.entities.User;
+import com.services.syslogin.model.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package com.services.syslogin.model.logic;
+package com.services.syslogin.service.utils;
 
 import org.springframework.stereotype.Component;
 

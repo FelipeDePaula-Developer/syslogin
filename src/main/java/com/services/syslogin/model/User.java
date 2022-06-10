@@ -1,4 +1,4 @@
-package com.services.syslogin.model.entities;
+package com.services.syslogin.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

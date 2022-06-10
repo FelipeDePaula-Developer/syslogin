@@ -165,10 +165,12 @@
                                 <div class="mb-3">
                                     <input type="text" id="username" name="username" class="form-control" placeholder="Username"
                                            aria-label="Name" aria-describedby="">
+                                    <span th:text="${errorUsername}" class="form-error-message"></span>
                                 </div>
                                 <div class="mb-3">
                                     <input type="email" id="email" name="email" class="form-control" placeholder="Email"
                                            aria-label="Email" aria-describedby="email-addon">
+                                    <span th:text="${errorEmail}" class="form-error-message"></span>
                                 </div>
                                 <div class="mb-3">
                                     <input type="password" id="password" name="password" class="form-control"

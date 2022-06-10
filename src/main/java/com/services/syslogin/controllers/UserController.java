@@ -1,19 +1,19 @@
 package com.services.syslogin.controllers;
 
-import com.services.syslogin.model.entities.User;
-import com.services.syslogin.model.logic.EncryptDecryptPassword;
-import com.services.syslogin.model.repositories.UserRepository;
-import com.services.syslogin.model.validations.UserDataValidation;
+import com.services.syslogin.model.User;
+import com.services.syslogin.service.utils.EncryptDecryptPassword;
+import com.services.syslogin.repository.UserRepository;
+import com.services.syslogin.service.UserService;
 import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 
 import java.util.Objects;
 
-@Controller
+@RestController
 public class UserController {
 
     @Autowired
@@ -21,15 +21,11 @@ public class UserController {
     @Autowired
     private EncryptDecryptPassword encryptDecryptPassword;
     @Autowired
-    private UserDataValidation userDataValidation;
+    private UserService userDataValidation;
 
 
     @PostMapping("/cad/user")
-    public @ResponseBody
-    JSONObject newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) throws Exception {
-        JSONObject json = new JSONObject();
-        json.put("username", "");
-        json.put("email", "");
+    public ModelAndView newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password) throws Exception {
 
         boolean emailValidate = userDataValidation.emailValidate(email);
         String userNameExists = userRepository.verifyUsernameExists(userName);
@@ -38,33 +34,35 @@ public class UserController {
             String encryptedPassword = encryptDecryptPassword.encryptPassword(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
-            json.put("success", "true");
-            return json;
+            return new ModelAndView("/pages/dashboard");
         } else {
-            if (userNameExists != null)
-                json.put("username", "Esse username já está cadastrado no nosso sistema");
+            ModelAndView mv = new ModelAndView("pages/sign-up");
 
-            if (emailExists != null)
-                json.put("email", "Esse email já está cadastrado no nosso sistema");
+            if (userNameExists != null) {
+                mv.addObject("username", userName);
+                mv.addObject("errorUsername", "Esse username já está cadastrado no nosso sistema");
+            }
 
-            json.put("error", "Erro ao cadastrar usuário");
-            return json;
+            if (emailExists != null) {
+                mv.addObject("email", email);
+                mv.addObject("errorEmail", "Esse username já está cadastrado no nosso sistema");
+            }
+
+            return mv;
         }
-
     }
 
     @PostMapping("/log/user")
     public @ResponseBody
-    JSONObject loginUser(@RequestParam String email, @RequestParam String password) throws Exception {
+    Object authUser(@RequestParam String email, @RequestParam String password) throws Exception {
         JSONObject json = new JSONObject();
-
         String dbUserReturn = userRepository.searchUserPerEmail(email);
-        System.out.println(dbUserReturn);
+
         if (dbUserReturn != null) {
             String[] userData = dbUserReturn.split(",");
             String dbpassword = encryptDecryptPassword.decryptPassword(userData[3]);
             if (Objects.equals(dbpassword, password)) {
-                json.put("success", "true");
+
             } else {
                 json.put("success", "false");
             }
