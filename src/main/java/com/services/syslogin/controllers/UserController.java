@@ -34,7 +34,7 @@ public class UserController {
             String encryptedPassword = encryptDecryptPassword.encryptPassword(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
-            return new ModelAndView("/pages/dashboard");
+            return new ModelAndView("redirect:/dashboard");
         } else {
             ModelAndView mv = new ModelAndView("pages/sign-up");
 
@@ -45,7 +45,7 @@ public class UserController {
 
             if (emailExists != null) {
                 mv.addObject("email", email);
-                mv.addObject("errorEmail", "Esse username já está cadastrado no nosso sistema");
+                mv.addObject("errorEmail", "Esse email já está cadastrado no nosso sistema");
             }
 
             return mv;
@@ -54,22 +54,21 @@ public class UserController {
 
     @PostMapping("/log/user")
     public @ResponseBody
-    Object authUser(@RequestParam String email, @RequestParam String password) throws Exception {
-        JSONObject json = new JSONObject();
-        String dbUserReturn = userRepository.searchUserPerEmail(email);
+    ModelAndView authUser(@RequestParam String email, @RequestParam String password) throws Exception {
+        ModelAndView mv = new ModelAndView("pages/sign-in");
 
+        String dbUserReturn = userRepository.searchUserPerEmail(email);
         if (dbUserReturn != null) {
             String[] userData = dbUserReturn.split(",");
             String dbpassword = encryptDecryptPassword.decryptPassword(userData[3]);
             if (Objects.equals(dbpassword, password)) {
-
+                return new ModelAndView("redirect:/dashboard");
             } else {
-                json.put("success", "false");
+                mv.addObject("loginError", "Email ou Senha Incorretos");
             }
         } else {
-            json.put("success", "false");
+            mv.addObject("loginError", "Email não encontrado realize seu cadastro");
         }
-
-        return json;
+        return mv;
     }
 }

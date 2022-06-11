@@ -97,22 +97,24 @@
                                 <p class="mb-0">Enter your email and password to sign in</p>
                             </div>
                             <div class="card-body">
-                                <form  role="form">
-                                    <label>Email</label>
+                                <form role="form">
+                                    <label class="label-text">Email</label>
                                     <div class="mb-3">
                                         <input type="text" id="user-email" class="form-control" placeholder="Email"
-                                               aria-label="Email" aria-describedby="user-email">
+                                               aria-label="Email" aria-describedby="user-email" required>
                                     </div>
-                                    <label>Password</label>
+                                    <label class="label-text">Password</label>
                                     <div class="mb-3">
                                         <input type="password" id="user-password" class="form-control"
                                                placeholder="Password" aria-label="Password"
-                                               aria-describedby="password-addon">
+                                               aria-describedby="password-addon" required>
                                     </div>
                                     <div id="check-box-remember-me" class="form-check form-switch">
                                         <input class="form-check-input" type="checkbox" id="rememberMe" checked="">
                                         <label class="form-check-label" for="rememberMe">Remember me</label>
                                     </div>
+                                    <span th:classappend="${loginError == null} ? 'hidden'"
+                                          th:text="${loginError}" class="form-error-message"></span>
                                     <div class="text-center">
                                         <button type="button" id="submit-form-login"
                                                 class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in

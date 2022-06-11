@@ -3,3 +3,19 @@
     font-size: 12px;
     margin-left: 5px;
 }
+
+.label-text{
+    font-size: 16px;
+}
+
+.hidden{
+    display: none;
+}
+
+.empty{
+    color: #495057;
+    background-color: #fff;
+    border-color: #e293d3;
+    outline: 0;
+    box-shadow: 0 0 0 2px #e9aede;
+}

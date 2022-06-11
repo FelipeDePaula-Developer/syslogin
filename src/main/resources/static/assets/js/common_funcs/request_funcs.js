@@ -17,11 +17,15 @@ function ajaxRequest(method, request_route, args, function_callback) {
     httpx.send(data);
 }
 
-function urlRequest(path, params, method='post') {
+function urlRequest(path, params, method = 'post') {
     const form = document.createElement('form');
     form.method = method;
+    if (window.location.hostname === "localhost") {
+        form.action = window.location.host;
+    } else {
+        form.action = window.location.hostname;
+    }
     form.action = path;
-
     for (const key in params) {
         if (params.hasOwnProperty(key)) {
             const hiddenField = document.createElement('input');
@@ -36,8 +40,23 @@ function urlRequest(path, params, method='post') {
     form.submit();
 }
 
+function checkInputsForm() {
+    const inputs = document.getElementsByClassName('required');
+    const len = inputs.length;
+    let valid = true;
+    for (let i = 0; i < len; i++) {
+        inputs[i].classList.remove("empty");
+        if (!inputs[i].value) {
+            inputs[i].classList.add("empty");
+            inputs[i].placeholder = "Campo Obrigátorio"
+            valid = false;
+        }
+    }
+    return valid;
+}
+
 function convertParamsToUrl(args) {
     return Object.keys(args).map(key => key + '=' + args[key]).join('&');
 }
 
-export {ajaxRequest, urlRequest};
+export {ajaxRequest, urlRequest, checkInputsForm};

@@ -162,20 +162,25 @@
                         </div>
                         <div class="card-body">
                             <form role="form text-left">
+                                <label class="label-text">Username</label>
                                 <div class="mb-3">
-                                    <input type="text" id="username" name="username" class="form-control" placeholder="Username"
-                                           aria-label="Name" aria-describedby="">
-                                    <span th:text="${errorUsername}" class="form-error-message"></span>
+                                    <input type="text" id="username" name="username" class="form-control required" placeholder="Username"
+                                           aria-label="Name" aria-describedby="" required />
+                                    <span th:classappend="${errorUsername == null} ? 'hidden'"
+                                          th:text="${errorUsername}" class="form-error-message"></span>
                                 </div>
+                                <label class="label-text">Email</label>
                                 <div class="mb-3">
-                                    <input type="email" id="email" name="email" class="form-control" placeholder="Email"
-                                           aria-label="Email" aria-describedby="email-addon">
-                                    <span th:text="${errorEmail}" class="form-error-message"></span>
+                                    <input type="email" id="email" name="email" class="form-control required" placeholder="Email"
+                                           aria-label="Email" aria-describedby="email-addon" required />
+                                    <span th:classappend="${errorEmail == null} ? 'hidden'"
+                                          th:text="${errorEmail}" class="form-error-message"></span>
                                 </div>
+                                <label class="label-text">Password</label>
                                 <div class="mb-3">
-                                    <input type="password" id="password" name="password" class="form-control"
+                                    <input type="password" id="password" name="password" class="form-control required"
                                            placeholder="Password"
-                                           aria-label="Password" aria-describedby="password-addon">
+                                           aria-label="Password" aria-describedby="password-addon" required />
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" id="submit-form" class="btn bg-gradient-dark w-100 my-4 mb-2">
