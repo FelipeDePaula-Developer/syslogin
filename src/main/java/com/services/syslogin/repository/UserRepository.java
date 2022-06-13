@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User, Integer> {
 
-    @Query(value = "select u.id, u.userName ,u.email, u.password  from User u where u.email = ?1")
+    @Query(value = "select u.userName ,u.email, u.password  from User u where u.email = ?1")
     String searchUserPerEmail(String email);
 
     @Query(value = "select u.id from User u where u.userName = ?1")

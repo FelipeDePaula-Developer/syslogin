@@ -8,7 +8,8 @@ function sendRequestLogUser(action) {
 
     let args = {
         email: document.getElementById('user-email').value,
-        password: document.getElementById('user-password').value
+        password: document.getElementById('user-password').value,
+        rememberMe: document.getElementById('rememberMe').checked
     };
 
     urlRequest("/log/user", args);
