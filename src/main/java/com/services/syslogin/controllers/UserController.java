@@ -1,10 +1,12 @@
 package com.services.syslogin.controllers;
 
 import com.services.syslogin.model.User;
-import com.services.syslogin.service.utils.EncryptDecryptPassword;
+import com.services.syslogin.model.UserLogin;
+import com.services.syslogin.repository.UserLoginRepository;
+import com.services.syslogin.service.utils.EncryptDecrypt;
 import com.services.syslogin.repository.UserRepository;
 import com.services.syslogin.service.UserService;
-import com.services.syslogin.service.utils.web.SessionFuncs;
+import com.services.syslogin.service.utils.web.WebFuncs;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,13 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private EncryptDecryptPassword encryptDecryptPassword;
+    private UserLoginRepository userLoginRepository;
+    @Autowired
+    private EncryptDecrypt encryptDecrypt;
     @Autowired
     private UserService userDataValidation;
     @Autowired
-    private SessionFuncs sessionFuncs;
+    private WebFuncs webFuncs;
 
 
     @PostMapping("/cad/user")
@@ -36,7 +40,7 @@ public class UserController {
         String emailExists = userRepository.verifyEmailExists(email);
 
         if (emailValidate && userNameExists == null && emailExists == null) {
-            String encryptedPassword = encryptDecryptPassword.encryptPassword(password);
+            String encryptedPassword = encryptDecrypt.encryptData(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
             return new ModelAndView("redirect:/dashboard");
@@ -56,27 +60,30 @@ public class UserController {
 
     @PostMapping("/log/user")
     public ModelAndView authUser(@RequestParam String email, @RequestParam String password, @RequestParam String rememberMe,
-                                 HttpSession session, HttpServletResponse response) throws Exception {
+                                 HttpSession session, HttpServletResponse response, HttpServletRequest request) throws Exception {
         ModelAndView mv = new ModelAndView("pages/sign-in");
-        String[] dbUserReturn = userRepository.searchUserPerEmail(email).split(",");
-        String userName = dbUserReturn[0];
-        String userEmail = dbUserReturn[1];
-        String userPassword = dbUserReturn[2];
+        String dbUserReturn = userRepository.searchUserPerEmail(email);
+        if (dbUserReturn != null) {
+            String[] dbUserData = dbUserReturn.split(",");
+            String userName = dbUserData[0];
+            String userEmail = dbUserData[1];
+            String userPassword = dbUserData[2];
+            String userId = dbUserData[3];
 
-        if (userPassword != null) {
-            String dbpassword = encryptDecryptPassword.decryptPassword(userPassword);
+            String dbpassword = encryptDecrypt.decryptData(userPassword);
 
             if (Objects.equals(dbpassword, password)) {
 
-                if (Objects.equals(rememberMe, "false")){
-                    sessionFuncs.setNonPersitentCookie("userEmail", userEmail, response);
-                    sessionFuncs.setNonPersitentCookie("userName", userName, response);
-                }else if (Objects.equals(rememberMe, "true")){
-                    sessionFuncs.setPersitentCookie("userEmail", userEmail, response);
-                    sessionFuncs.setPersitentCookie("userName", userName, response);
-                }
+               if (Objects.equals(rememberMe, "true")){
+                   String userIP = webFuncs.getClientIpAddress(request);
+                    webFuncs.setRememberMeCookie(userName, userId, userIP, response);
 
-                session.setAttribute("usuarioLogado", userEmail);
+                   UserLogin ul = new UserLogin("T", userIP);
+                   userLoginRepository.save(ul);
+               }
+
+                session.setAttribute("userName", userName);
+                session.setAttribute("userEmail", userEmail);
                 return new ModelAndView("redirect:/dashboard");
             } else {
                 mv.addObject("email", email);
