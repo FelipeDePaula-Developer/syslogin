@@ -3,39 +3,45 @@ package com.services.syslogin.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@Entity
+@Entity(name = "user_login")
 public class UserLogin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int login_id;
+    private int id_login;
 
     @ManyToOne
-    @NotBlank
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
     @NotBlank
-    @Column(columnDefinition ="char")
+    @Column(columnDefinition = "char")
     private String remember_me;
     @NotBlank
     @Column(columnDefinition = "timestamp")
     private String dh_login;
     @NotBlank
     private String user_ip;
+    @NotBlank
+    @Column(columnDefinition = "char")
+    private String logged;
 
-    public UserLogin(){
+    public UserLogin() {
 
     }
 
-    public UserLogin(String remember_me, String user_ip) {
+    public UserLogin(String remember_me, String user_ip, String logged, User user) {
         this.remember_me = remember_me;
         this.user_ip = user_ip;
+        this.logged = logged;
+        this.user = user;
     }
 
-    public int getLogin_id() {
-        return login_id;
+    public int getId_login() {
+        return id_login;
     }
 
-    public void setLogin_id(int login_id) {
-        this.login_id = login_id;
+    public void setId_login(int id_login) {
+        this.id_login = id_login;
     }
 
     public User getUser_id() {
@@ -69,4 +75,13 @@ public class UserLogin {
     public void setUser_ip(String user_ip) {
         this.user_ip = user_ip;
     }
+
+    public String getLogged() {
+        return logged;
+    }
+
+    public void setLogged(String logged) {
+        this.logged = logged;
+    }
+
 }

@@ -6,11 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 
-@Entity
+@Entity(name = "user")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int id_user;
 
     @NotBlank
     private String userName;
@@ -31,11 +31,11 @@ public class User {
     }
 
     public int getId() {
-        return id;
+        return id_user;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int id_user) {
+        this.id_user = id_user;
     }
 
     public String getUserName() {

@@ -62,28 +62,21 @@ public class UserController {
     public ModelAndView authUser(@RequestParam String email, @RequestParam String password, @RequestParam String rememberMe,
                                  HttpSession session, HttpServletResponse response, HttpServletRequest request) throws Exception {
         ModelAndView mv = new ModelAndView("pages/sign-in");
-        String dbUserReturn = userRepository.searchUserPerEmail(email);
-        if (dbUserReturn != null) {
-            String[] dbUserData = dbUserReturn.split(",");
-            String userName = dbUserData[0];
-            String userEmail = dbUserData[1];
-            String userPassword = dbUserData[2];
-            String userId = dbUserData[3];
-
-            String dbpassword = encryptDecrypt.decryptData(userPassword);
-
+        User user = userRepository.findUserByEmail(email);
+        if (user != null) {
+            String dbpassword = encryptDecrypt.decryptData(user.getPassword());
             if (Objects.equals(dbpassword, password)) {
 
                if (Objects.equals(rememberMe, "true")){
                    String userIP = webFuncs.getClientIpAddress(request);
-                    webFuncs.setRememberMeCookie(userName, userId, userIP, response);
+                    webFuncs.setRememberMeCookie(user.getUserName(), user.getId(), userIP, response);
 
-                   UserLogin ul = new UserLogin("T", userIP);
+                   UserLogin ul = new UserLogin("T", userIP, "T", user);
                    userLoginRepository.save(ul);
                }
 
-                session.setAttribute("userName", userName);
-                session.setAttribute("userEmail", userEmail);
+                session.setAttribute("userName", user.getUserName());
+                session.setAttribute("userEmail", user.getEmail());
                 return new ModelAndView("redirect:/dashboard");
             } else {
                 mv.addObject("email", email);

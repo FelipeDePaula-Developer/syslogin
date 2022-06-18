@@ -30,19 +30,5 @@ public class UserService {
         }
     }
 
-    public boolean authUser(String email, String password) throws Exception {
 
-        String[] dbUserReturn = userRepository.searchUserPerEmail(email).split(",");
-        String userName = dbUserReturn[0];
-        String userEmail = dbUserReturn[1];
-        String userPassword = dbUserReturn[2];
-
-        if (userPassword != null) {
-            String dbpassword = encryptDecrypt.decryptData(userPassword);
-            return Objects.equals(dbpassword, password);
-        } else {
-            return false;
-        }
-
-    }
 }
