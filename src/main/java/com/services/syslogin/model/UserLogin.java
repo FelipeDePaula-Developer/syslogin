@@ -10,7 +10,7 @@ public class UserLogin {
     private int id_login;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id_user", nullable = false)
     private User user;
 
     @NotBlank
@@ -24,16 +24,19 @@ public class UserLogin {
     @NotBlank
     @Column(columnDefinition = "char")
     private String logged;
+    @NotBlank
+    private String user_key;
 
     public UserLogin() {
 
     }
 
-    public UserLogin(String remember_me, String user_ip, String logged, User user) {
+    public UserLogin(User user, String remember_me, String user_ip, String logged, String user_key) {
+        this.user = user;
         this.remember_me = remember_me;
         this.user_ip = user_ip;
         this.logged = logged;
-        this.user = user;
+        this.user_key = user_key;
     }
 
     public int getId_login() {
@@ -82,6 +85,14 @@ public class UserLogin {
 
     public void setLogged(String logged) {
         this.logged = logged;
+    }
+
+    public String getKey() {
+        return user_key;
+    }
+
+    public void setKey(String user_key) {
+        this.user_key = user_key;
     }
 
 }

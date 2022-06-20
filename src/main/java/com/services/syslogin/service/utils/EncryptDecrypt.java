@@ -19,11 +19,12 @@ public class EncryptDecrypt {
         this.cipher = Cipher.getInstance("AES");
     }
 
-    public Key genKey() throws NoSuchAlgorithmException {
+    public static String genKey() throws NoSuchAlgorithmException {
         KeyGenerator keyGen = KeyGenerator.getInstance("AES");
         SecureRandom secRandom = new SecureRandom();
         keyGen.init(secRandom);
-        return keyGen.generateKey();
+        byte[] key = keyGen.generateKey().getEncoded();
+        return Base64.getEncoder().encodeToString(key);
     }
 
     public String encryptData(String data) throws Exception {

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Base64;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,6 +30,12 @@ public class UserService {
             return false;
         }
     }
+
+    public void validateRememberMeCookie(String cookie) throws Exception {
+        String decCookie = encryptDecrypt.decryptData(cookie);
+
+        System.out.println(decCookie);
+    };
 
 
 }

@@ -1,5 +1,6 @@
 package com.services.syslogin.controllers;
 
+import com.services.syslogin.service.UserService;
 import com.services.syslogin.service.utils.web.WebFuncs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,16 +15,16 @@ public class RouterController {
 
     @Autowired
     private WebFuncs webFuncs;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping("/")
-    public String index(HttpServletRequest request, HttpSession session) {
+    public String index(HttpServletRequest request, HttpSession session) throws Exception {
 
-        Cookie cookieUserEmail =  webFuncs.getCookie(request, "userEmail");
-        Cookie cookieUserName = webFuncs.getCookie(request, "userName");
+        Cookie rememberMeCookie =  webFuncs.getCookie(request, "remember-me");
 
-        if (cookieUserName != null && cookieUserEmail != null){
-            session.setAttribute(cookieUserEmail.getName(), cookieUserEmail.getValue());
-            session.setAttribute(cookieUserName.getName(), cookieUserName.getValue());
+        if (rememberMeCookie != null){
+            userService.validateRememberMeCookie(rememberMeCookie.getValue());
             return "pages/dashboard";
         }
         return "pages/sign-in";

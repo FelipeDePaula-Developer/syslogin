@@ -21,7 +21,7 @@ public class WebFuncs {
             "HTTP_FORWARDED_FOR",
             "HTTP_FORWARDED",
             "HTTP_VIA",
-            "REMOTE_ADDR" };
+            "REMOTE_ADDR"};
 
     @Autowired
     private EncryptDecrypt encryptDecrypt;
@@ -47,16 +47,17 @@ public class WebFuncs {
         response.addCookie(cookie);
     }
 
-    public void setRememberMeCookie(String username, int userId , String userIp ,HttpServletResponse response) throws Exception {
+    public void setRememberMeCookie(String username, int userId, String userIp, String key, HttpServletResponse response) throws Exception {
         response.setContentType("text/html");
 
-        String cryptoInfos = encryptDecrypt.encryptData(username + ":" +
-                                                        Integer.toString(userId) + ":" +
-                                                        15 * 24 * 60 * 60 + ":" +
-                                                        userIp);
+        String cryptoInfos = encryptDecrypt.encryptData(username + ";" +
+                Integer.toString(userId) + ";" +
+                15 * 24 * 60 * 60 + ";" +
+                userIp + ";" +
+                key);
 
         Cookie cookie = new Cookie("remember-me", cryptoInfos);
-        cookie.setMaxAge(15*24*60*60);
+        cookie.setMaxAge(15 * 24 * 60 * 60);
         cookie.setPath("/");
 
         response.addCookie(cookie);
