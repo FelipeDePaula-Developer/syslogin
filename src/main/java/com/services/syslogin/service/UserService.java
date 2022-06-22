@@ -31,8 +31,11 @@ public class UserService {
         }
     }
 
+    // TODO: 20/06/2022
+    // Alterar forma de criptografa está causando problema ao descriptogar devido a quantidade de caracteres
+
     public void validateRememberMeCookie(String cookie) throws Exception {
-        String decCookie = encryptDecrypt.decryptData(cookie);
+        String decCookie = encryptDecrypt.decryptPassword(cookie);
 
         System.out.println(decCookie);
     };

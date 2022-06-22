@@ -43,7 +43,7 @@ public class UserController {
 
         if (emailValidate && userNameExists == null && emailExists == null) {
             String userIP = webFuncs.getClientIpAddress(request);
-            String encryptedPassword = encryptDecrypt.encryptData(password);
+            String encryptedPassword = encryptDecrypt.encryptPassword(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
 
@@ -72,7 +72,7 @@ public class UserController {
         ModelAndView mv = new ModelAndView("pages/sign-in");
         User user = userRepository.findUserByEmail(email);
         if (user != null) {
-            String dbpassword = encryptDecrypt.decryptData(user.getPassword());
+            String dbpassword = encryptDecrypt.decryptPassword(user.getPassword());
             if (Objects.equals(dbpassword, password)) {
 
                 String userIP = webFuncs.getClientIpAddress(request);

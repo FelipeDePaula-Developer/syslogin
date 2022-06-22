@@ -27,7 +27,7 @@ public class EncryptDecrypt {
         return Base64.getEncoder().encodeToString(key);
     }
 
-    public String encryptData(String data) throws Exception {
+    public String encryptPassword(String data) throws Exception {
         this.cipher.init(Cipher.ENCRYPT_MODE, this.AESkey);
         byte[] input = data.getBytes();
         this.cipher.update(input);
@@ -35,7 +35,7 @@ public class EncryptDecrypt {
         return Base64.getEncoder().encodeToString(cipherText);
     }
 
-    public String decryptData(String encData) throws Exception {
+    public String decryptPassword(String encData) throws Exception {
         byte[] password = Base64.getDecoder().decode(encData.getBytes());
         this.cipher.init(Cipher.DECRYPT_MODE, this.AESkey);
         byte[] decipheredText = this.cipher.doFinal(password);
