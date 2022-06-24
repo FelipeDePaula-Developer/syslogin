@@ -1,12 +1,16 @@
 package com.services.syslogin.service;
 
+import com.services.syslogin.model.UserLogin;
+import com.services.syslogin.repository.UserLoginRepository;
 import com.services.syslogin.repository.UserRepository;
 import com.services.syslogin.service.utils.EncryptDecrypt;
+import com.services.syslogin.service.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Base64;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +24,11 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private UserLoginRepository userLoginRepository;
+    @Autowired
     private EncryptDecrypt encryptDecrypt;
+    @Autowired
+    private Utils utils;
 
     public boolean emailValidate(String email) {
         Matcher matcher = pattern.matcher(email);
@@ -31,11 +39,12 @@ public class UserService {
         }
     }
 
-    // TODO: 20/06/2022
-    // Alterar forma de criptografa está causando problema ao descriptogar devido a quantidade de caracteres
-
     public void validateRememberMeCookie(String cookie) throws Exception {
         String decCookie = encryptDecrypt.decryptPassword(cookie);
+        Map<String, String> map = utils.convertStringToMap(cookie, "&", " = ");
+        UserLogin userLogin = userLoginRepository.findUserLoginByKey(map.get("key"));
+
+
 
         System.out.println(decCookie);
     };

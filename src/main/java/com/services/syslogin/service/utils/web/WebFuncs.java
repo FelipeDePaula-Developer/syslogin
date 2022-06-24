@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.*;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class WebFuncs {
@@ -63,30 +65,9 @@ public class WebFuncs {
         infosCookies.put("userIp", userIp);
         infosCookies.put("key", key);
 
-        String encodedCookie = infosCookies.keySet().stream().map(keyMap -> {
-            try {
-                return keyMap + "=" + URLEncoder.encode(infosCookies.get(keyMap), StandardCharsets.UTF_8.toString());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return e;
-            }
-        }).collect(Collectors.joining("&"));
+        String infoURLCookie = encodeParamsToURL(infosCookies);
 
-//        String cryptoInfos = (username + ";" +
-//                Integer.toString(userId) + ";" +
-//                15 * 24 * 60 * 60 + ";" +
-//                userIp + ";" +
-//                key);
-//
-//        String InfoCookie = URLEncoder.encode(username + "&" +
-//                Integer.toString(userId) + "&" +
-//                15 * 24 * 60 * 60 + "&" +
-//                userIp + "&" +
-//                key);
-
-        System.out.println(InfoCookie);
-
-        Cookie cookie = new Cookie("remember-me", InfoCookie);
+        Cookie cookie = new Cookie("remember-me", infoURLCookie);
         cookie.setMaxAge(15 * 24 * 60 * 60);
         cookie.setSecure(true);
         cookie.setHttpOnly(true);
@@ -103,5 +84,38 @@ public class WebFuncs {
             }
         }
         return request.getRemoteAddr();
+    }
+
+    public String encodeParamsToURL(Map<String, String> infos) {
+        return infos.keySet().stream()
+                .map(keyMap -> {
+                    try {
+                        return keyMap + "=" + encodeURL(infos.get(keyMap));
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    return keyMap;
+                })
+                .collect(Collectors.joining("&", "", ""));
+    }
+
+    public String decodeURLParams(String params) {
+        return Arrays.stream(params.split("&")).map(key -> {
+                    try {
+                        return key.split("=")[0] + " = " + decodeURL(key.split("=")[1]);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    }
+                    return key;
+                }).
+        collect(Collectors.joining("&"));
+    }
+
+    private String encodeURL(String value) throws UnsupportedEncodingException {
+        return URLEncoder.encode(value, StandardCharsets.UTF_8.toString());
+    }
+
+    private String decodeURL(String value) throws UnsupportedEncodingException {
+        return URLDecoder.decode(value, StandardCharsets.UTF_8.toString());
     }
 }

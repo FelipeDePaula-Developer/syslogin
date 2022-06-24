@@ -1,6 +1,7 @@
 package com.services.syslogin.controllers;
 
 import com.services.syslogin.service.UserService;
+import com.services.syslogin.service.utils.Utils;
 import com.services.syslogin.service.utils.web.WebFuncs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class RouterController {
@@ -17,21 +20,26 @@ public class RouterController {
     private WebFuncs webFuncs;
     @Autowired
     private UserService userService;
+    @Autowired
+    private Utils utils;
 
     @RequestMapping("/")
     public String index(HttpServletRequest request, HttpSession session) throws Exception {
 
-        Cookie rememberMeCookie =  webFuncs.getCookie(request, "remember-me");
+        Cookie rememberMeCookie = webFuncs.getCookie(request, "remember-me");
 
-        if (rememberMeCookie != null){
-            userService.validateRememberMeCookie(rememberMeCookie.getValue());
+        if (rememberMeCookie != null) {
+            String cookieValue = webFuncs.decodeURLParams(rememberMeCookie.getValue());
+            userService.validateRememberMeCookie(cookieValue);
             return "pages/dashboard";
         }
         return "pages/sign-in";
     }
 
     @RequestMapping("/sign-in")
-    public String signIn() { return "pages/sign-in"; }
+    public String signIn() {
+        return "pages/sign-in";
+    }
 
     @RequestMapping("/sign-up")
     public String signUp() {
@@ -39,7 +47,9 @@ public class RouterController {
     }
 
     @RequestMapping("/dashboard")
-    public String dashboard() { return "pages/dashboard"; }
+    public String dashboard() {
+        return "pages/dashboard";
+    }
 
 
 }
