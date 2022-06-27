@@ -1,14 +1,17 @@
 package com.services.syslogin.service;
 
+import com.services.syslogin.model.User;
 import com.services.syslogin.model.UserLogin;
 import com.services.syslogin.repository.UserLoginRepository;
 import com.services.syslogin.repository.UserRepository;
 import com.services.syslogin.service.utils.EncryptDecrypt;
 import com.services.syslogin.service.utils.Utils;
+import com.services.syslogin.service.utils.web.WebFuncs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
@@ -22,32 +25,32 @@ public class UserService {
     private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN, Pattern.CASE_INSENSITIVE);
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private UserLoginRepository userLoginRepository;
     @Autowired
-    private EncryptDecrypt encryptDecrypt;
-    @Autowired
     private Utils utils;
+    @Autowired
+    private EncryptDecrypt encryptDecrypt;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public boolean emailValidate(String email) {
         Matcher matcher = pattern.matcher(email);
-        if (matcher.matches()) {
-            return true;
-        } else {
-            return false;
-        }
+        return matcher.matches();
     }
 
-    public void validateRememberMeCookie(String cookie) throws Exception {
-        String decCookie = encryptDecrypt.decryptPassword(cookie);
-        Map<String, String> map = utils.convertStringToMap(cookie, "&", " = ");
-        UserLogin userLogin = userLoginRepository.findUserLoginByKey(map.get("key"));
+    public Boolean validateRememberMeCookie(String cookie, HttpServletRequest request) throws Exception {
+        Map<String, String> cookieDec = utils.convertStringToMap(cookie, "&", " = ");
+        UserLogin userLogin = userLoginRepository.getUserLoginByUser_Key(cookieDec.get("key"),  cookieDec.get("userId"));
 
+        if (userLogin != null) {
+            userLogin.setLogged("T");
+            userLoginRepository.save(userLogin);
+            return true;
+        }
+        return false;
+    }
 
-
-        System.out.println(decCookie);
-    };
 
 
 }

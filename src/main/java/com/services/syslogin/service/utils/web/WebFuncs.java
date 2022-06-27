@@ -76,7 +76,7 @@ public class WebFuncs {
         response.addCookie(cookie);
     }
 
-    public String getClientIpAddress(HttpServletRequest request) {
+    public static String getClientIpAddress(HttpServletRequest request) {
         for (String header : IP_HEADER_CANDIDATES) {
             String ip = request.getHeader(header);
             if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
