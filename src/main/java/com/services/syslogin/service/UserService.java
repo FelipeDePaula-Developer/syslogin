@@ -41,7 +41,8 @@ public class UserService {
 
     public Boolean validateRememberMeCookie(String cookie, HttpServletRequest request) throws Exception {
         Map<String, String> cookieDec = utils.convertStringToMap(cookie, "&", " = ");
-        UserLogin userLogin = userLoginRepository.getUserLoginByUser_Key(cookieDec.get("key"),  cookieDec.get("userId"));
+        System.out.println(cookieDec.get("userId"));
+        UserLogin userLogin = userLoginRepository.getUserLoginByUser_Key(cookieDec.get("key"), Integer.parseInt(cookieDec.get("userId")));
 
         if (userLogin != null) {
             userLogin.setLogged("T");

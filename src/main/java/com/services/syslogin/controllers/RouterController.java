@@ -53,5 +53,10 @@ public class RouterController {
         return "pages/dashboard";
     }
 
+    @RequestMapping("/debug")
+    public String debug() {
+        return "fragments/navbar";
+    }
+
 
 }
