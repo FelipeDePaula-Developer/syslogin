@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
@@ -39,12 +40,13 @@ public class UserService {
         return matcher.matches();
     }
 
-    public Boolean validateRememberMeCookie(String cookie, HttpServletRequest request) throws Exception {
+    public Boolean validateRememberMeCookie(String cookie, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, String> cookieDec = utils.convertStringToMap(cookie, "&", " = ");
         System.out.println(cookieDec.get("userId"));
         UserLogin userLogin = userLoginRepository.getUserLoginByUser_Key(cookieDec.get("key"), Integer.parseInt(cookieDec.get("userId")));
 
         if (userLogin != null) {
+            session.setAttribute("username", cookieDec.get("username"));
             userLogin.setLogged("T");
             userLoginRepository.save(userLogin);
             return true;

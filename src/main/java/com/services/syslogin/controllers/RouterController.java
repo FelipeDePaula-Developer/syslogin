@@ -24,13 +24,13 @@ public class RouterController {
     private Utils utils;
 
     @RequestMapping("/")
-    public String index(HttpServletRequest request) throws Exception {
+    public String index(HttpServletRequest request, HttpSession session) throws Exception {
 
         Cookie rememberMeCookie = webFuncs.getCookie(request, "remember-me");
 
         if (rememberMeCookie != null) {
             String cookieValue = webFuncs.decodeURLParams(rememberMeCookie.getValue());
-            boolean check = userService.validateRememberMeCookie(cookieValue, request);
+            boolean check = userService.validateRememberMeCookie(cookieValue, request, session);
             if (check) {
                 return "pages/dashboard";
             }
@@ -46,16 +46,6 @@ public class RouterController {
     @RequestMapping("/sign-up")
     public String signUp() {
         return "pages/sign-up";
-    }
-
-    @RequestMapping("/dashboard")
-    public String dashboard() {
-        return "pages/dashboard";
-    }
-
-    @RequestMapping("/debug")
-    public String debug() {
-        return "fragments/navbar";
     }
 
 

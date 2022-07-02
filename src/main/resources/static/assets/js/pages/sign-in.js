@@ -12,7 +12,7 @@ function sendRequestLogUser(action) {
         rememberMe: document.getElementById('rememberMe').checked
     };
 
-    urlRequest("/log/user", args);
+    urlRequest("/login/user", args);
 }
 
 let action = document.getElementById('submit-form-login');

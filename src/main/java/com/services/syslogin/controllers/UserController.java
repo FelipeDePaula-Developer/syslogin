@@ -65,7 +65,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/log/user")
+    @PostMapping("/login/user")
     public ModelAndView authUser(@RequestParam String email, @RequestParam String password, @RequestParam String rememberMe,
                                  HttpSession session, HttpServletResponse response, HttpServletRequest request) throws Exception {
 
@@ -86,10 +86,8 @@ public class UserController {
                     userLoginRepository.save(ul);
                 }
 
-                session.setAttribute("userName", user.getUserName());
-                session.setAttribute("userEmail", user.getEmail());
+                session.setAttribute("username", user.getUserName());
                 return new ModelAndView("redirect:/dashboard");
-
             } else {
                 mv.addObject("email", email);
                 mv.addObject("loginError", "Email ou Senha Incorretos");
@@ -100,4 +98,12 @@ public class UserController {
 
         return mv;
     }
+
+    @GetMapping("/logout/user")
+    public ModelAndView logoutUser (){
+        ModelAndView mv = new ModelAndView("pages/sign-in");
+
+        return mv;
+    }
+
 }
