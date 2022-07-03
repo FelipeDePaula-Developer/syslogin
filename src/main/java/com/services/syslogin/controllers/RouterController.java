@@ -23,7 +23,7 @@ public class RouterController {
     @Autowired
     private Utils utils;
 
-    @RequestMapping("/")
+    @RequestMapping(value = {"/", "/dashboard"})
     public String index(HttpServletRequest request, HttpSession session) throws Exception {
 
         Cookie rememberMeCookie = webFuncs.getCookie(request, "remember-me");

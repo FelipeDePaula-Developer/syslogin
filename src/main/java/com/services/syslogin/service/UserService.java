@@ -31,7 +31,6 @@ public class UserService {
     private Utils utils;
     @Autowired
     private EncryptDecrypt encryptDecrypt;
-
     @Autowired
     private UserRepository userRepository;
 
@@ -42,8 +41,7 @@ public class UserService {
 
     public Boolean validateRememberMeCookie(String cookie, HttpServletRequest request, HttpSession session) throws Exception {
         Map<String, String> cookieDec = utils.convertStringToMap(cookie, "&", " = ");
-        System.out.println(cookieDec.get("userId"));
-        UserLogin userLogin = userLoginRepository.getUserLoginByUser_Key(cookieDec.get("key"), Integer.parseInt(cookieDec.get("userId")));
+        UserLogin userLogin = userLoginRepository.getUserLoginByUser_KeyAndId_user(cookieDec.get("key"), Integer.parseInt(cookieDec.get("userId")));
 
         if (userLogin != null) {
             session.setAttribute("username", cookieDec.get("username"));

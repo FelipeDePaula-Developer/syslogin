@@ -6,18 +6,18 @@ import com.services.syslogin.repository.UserLoginRepository;
 import com.services.syslogin.service.utils.EncryptDecrypt;
 import com.services.syslogin.repository.UserRepository;
 import com.services.syslogin.service.UserService;
+import com.services.syslogin.service.utils.Utils;
 import com.services.syslogin.service.utils.web.WebFuncs;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.security.Key;
-import java.util.Base64;
+
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -33,6 +33,8 @@ public class UserController {
     private UserService userDataValidation;
     @Autowired
     private WebFuncs webFuncs;
+    @Autowired
+    private Utils utils;
 
     @PostMapping("/cad/user")
     public ModelAndView newUser(@RequestParam String userName, @RequestParam String email, @RequestParam String password,
@@ -42,7 +44,7 @@ public class UserController {
         String emailExists = userRepository.verifyEmailExists(email);
 
         if (emailValidate && userNameExists == null && emailExists == null) {
-            String userIP = webFuncs.getClientIpAddress(request);
+            String userIP = WebFuncs.getClientIpAddress(request);
             String encryptedPassword = encryptDecrypt.encryptPassword(password);
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
@@ -61,6 +63,10 @@ public class UserController {
                 mv.addObject("email", email);
                 mv.addObject("errorEmail", "Esse email já está cadastrado no nosso sistema");
             }
+            if (!emailValidate) {
+                mv.addObject("email", email);
+                mv.addObject("errorEmail", "Formato do email invalido");
+            }
             return mv;
         }
     }
@@ -68,42 +74,57 @@ public class UserController {
     @PostMapping("/login/user")
     public ModelAndView authUser(@RequestParam String email, @RequestParam String password, @RequestParam String rememberMe,
                                  HttpSession session, HttpServletResponse response, HttpServletRequest request) throws Exception {
-
         ModelAndView mv = new ModelAndView("pages/sign-in");
-        User user = userRepository.findUserByEmail(email);
-        if (user != null) {
-            String dbpassword = encryptDecrypt.decryptPassword(user.getPassword());
-            if (Objects.equals(dbpassword, password)) {
+        boolean emailValidate = userDataValidation.emailValidate(email);
+        if (emailValidate) {
+            User user = userRepository.findUserByEmail(email);
+            if (user != null) {
+                String userPassword = encryptDecrypt.decryptPassword(user.getPassword());
+                if (Objects.equals(userPassword, password)) {
 
-                String userIP = webFuncs.getClientIpAddress(request);
-                String key = EncryptDecrypt.genKey();
-                if (Objects.equals(rememberMe, "true")) {
-                    webFuncs.setRememberMeCookie(user.getUserName(), user.getId(), userIP, key, response);
-                    UserLogin ul = new UserLogin(user, "T", userIP, "T", key);
-                    userLoginRepository.save(ul);
+                    String userIP = WebFuncs.getClientIpAddress(request);
+                    String key = EncryptDecrypt.genKey();
+                    if (Objects.equals(rememberMe, "true")) {
+                        webFuncs.setRememberMeCookie(user.getUserName(), user.getId(), userIP, key, response);
+                        UserLogin ul = new UserLogin(user, "T", userIP, "T", key);
+                        userLoginRepository.save(ul);
+                    } else {
+                        UserLogin ul = new UserLogin(user, "F", userIP, "T", key);
+                        userLoginRepository.save(ul);
+                    }
+
+                    session.setAttribute("username", user.getUserName());
+                    return new ModelAndView("redirect:/dashboard");
                 } else {
-                    UserLogin ul = new UserLogin(user, "F", userIP, "T", key);
-                    userLoginRepository.save(ul);
+                    mv.addObject("email", email);
+                    mv.addObject("loginError", "Email ou Senha Incorretos");
                 }
-
-                session.setAttribute("username", user.getUserName());
-                return new ModelAndView("redirect:/dashboard");
             } else {
-                mv.addObject("email", email);
-                mv.addObject("loginError", "Email ou Senha Incorretos");
+                mv.addObject("loginError", "Email não encontrado, realize seu cadastro");
             }
-        } else {
-            mv.addObject("loginError", "Email não encontrado realize seu cadastro");
         }
-
         return mv;
     }
 
     @GetMapping("/logout/user")
-    public ModelAndView logoutUser (){
-        ModelAndView mv = new ModelAndView("pages/sign-in");
+    public ModelAndView logoutUser(HttpSession session, HttpServletRequest request) {
+        Cookie rememberMeCookie = webFuncs.getCookie(request, "remember-me");
 
-        return mv;
+        if (rememberMeCookie != null) {
+            String cookieValue = webFuncs.decodeURLParams(rememberMeCookie.getValue());
+            Map<String, String> cookieValueMap = utils.convertStringToMap(cookieValue, "&", " = ");
+            UserLogin userLogin = userLoginRepository.getUserLoginByUser_KeyAndId_user(cookieValueMap.get("key"), Integer.parseInt(cookieValueMap.get("userId")));
+
+            if (userLogin != null) {
+                userLogin.setRemember_me("F");
+                userLoginRepository.save(userLogin);
+            }
+
+            rememberMeCookie.setMaxAge(-1);
+        }
+        session.invalidate();
+
+        return new ModelAndView("redirect:pages/sign-in");
     }
 
 }
