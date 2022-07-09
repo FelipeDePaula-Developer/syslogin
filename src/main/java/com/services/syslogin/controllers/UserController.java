@@ -49,7 +49,7 @@ public class UserController {
             User user = new User(userName, email, encryptedPassword);
             userRepository.save(user);
 
-            UserLogin ul = new UserLogin(user, "F", webFuncs.getClientIpAddress(request), "T", EncryptDecrypt.genKey());
+            UserLogin ul = new UserLogin(user, "F", webFuncs.getClientIpAddress(request), "T", encryptDecrypt.genKey());
             userLoginRepository.save(ul);
 
             return new ModelAndView("redirect:/dashboard");
@@ -95,6 +95,7 @@ public class UserController {
 
                     session.setAttribute("username", user.getUserName());
                     return new ModelAndView("redirect:/dashboard");
+
                 } else {
                     mv.addObject("email", email);
                     mv.addObject("loginError", "Email ou Senha Incorretos");
@@ -117,6 +118,7 @@ public class UserController {
 
             if (userLogin != null) {
                 userLogin.setRemember_me("F");
+                userLogin.setLogged("F");
                 userLoginRepository.save(userLogin);
             }
 
@@ -124,7 +126,7 @@ public class UserController {
         }
         session.invalidate();
 
-        return new ModelAndView("redirect:pages/sign-in");
+        return new ModelAndView("redirect:/sign-in");
     }
 
 }

@@ -1,21 +1,16 @@
 package com.services.syslogin.service;
 
-import com.services.syslogin.model.User;
 import com.services.syslogin.model.UserLogin;
 import com.services.syslogin.repository.UserLoginRepository;
-import com.services.syslogin.repository.UserRepository;
-import com.services.syslogin.service.utils.EncryptDecrypt;
 import com.services.syslogin.service.utils.Utils;
 import com.services.syslogin.service.utils.web.WebFuncs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Base64;
 import java.util.Map;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,16 +25,21 @@ public class UserService {
     @Autowired
     private Utils utils;
     @Autowired
-    private EncryptDecrypt encryptDecrypt;
-    @Autowired
-    private UserRepository userRepository;
+    private WebFuncs webFuncs;
 
     public boolean emailValidate(String email) {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
 
-    public Boolean validateRememberMeCookie(String cookie, HttpServletRequest request, HttpSession session) throws Exception {
+    public Boolean validateRememberMeCookie(HttpServletRequest request, HttpSession session) throws Exception {
+
+        Cookie rememberMeCookie = webFuncs.getCookie(request, "remember-me");
+        if (rememberMeCookie == null) {
+           return false;
+        }
+
+        String cookie = webFuncs.decodeURLParams(rememberMeCookie.getValue());
         Map<String, String> cookieDec = utils.convertStringToMap(cookie, "&", " = ");
         UserLogin userLogin = userLoginRepository.getUserLoginByUser_KeyAndId_user(cookieDec.get("key"), Integer.parseInt(cookieDec.get("userId")));
 
@@ -51,7 +51,4 @@ public class UserService {
         }
         return false;
     }
-
-
-
 }

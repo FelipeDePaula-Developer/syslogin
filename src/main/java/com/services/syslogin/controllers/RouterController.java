@@ -17,34 +17,23 @@ import java.util.Map;
 public class RouterController {
 
     @Autowired
-    private WebFuncs webFuncs;
-    @Autowired
     private UserService userService;
-    @Autowired
-    private Utils utils;
 
-    @RequestMapping(value = {"/", "/dashboard"})
+    @RequestMapping(value = {"/", "/dashboard", "/sign-in"})
     public String index(HttpServletRequest request, HttpSession session) throws Exception {
-
-        Cookie rememberMeCookie = webFuncs.getCookie(request, "remember-me");
-
-        if (rememberMeCookie != null) {
-            String cookieValue = webFuncs.decodeURLParams(rememberMeCookie.getValue());
-            boolean check = userService.validateRememberMeCookie(cookieValue, request, session);
-            if (check) {
-                return "pages/dashboard";
-            }
+        boolean check = userService.validateRememberMeCookie(request, session);
+        if (check) {
+            return "pages/dashboard";
         }
         return "pages/sign-in";
     }
 
-    @RequestMapping("/sign-in")
-    public String signIn() {
-        return "pages/sign-in";
-    }
-
     @RequestMapping("/sign-up")
-    public String signUp() {
+    public String signUp(HttpServletRequest request, HttpSession session) throws Exception {
+        boolean check = userService.validateRememberMeCookie(request, session);
+        if (check) {
+            return "pages/dashboard";
+        }
         return "pages/sign-up";
     }
 
